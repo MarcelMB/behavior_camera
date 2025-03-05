@@ -14,6 +14,38 @@ A Python package for controlling and recording from a Sony IMX335 CMOS camera ov
 - Video recording with timestamp synchronization
 - Live preview with FPS display
 - Command-line interface for easy operation
+- Dual interface support:
+  - Direct USB control (requires libusb)
+  - OpenCV fallback for basic functionality
+
+## System Requirements
+
+### Required Software
+- Python 3.8 or higher
+- OpenCV (installed automatically)
+- libusb (for direct USB camera control)
+
+### Installing libusb
+
+#### macOS
+```bash
+# Install Homebrew if not already installed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install libusb
+brew install libusb
+```
+
+#### Linux (Ubuntu/Debian)
+```bash
+sudo apt-get update
+sudo apt-get install libusb-1.0-0
+```
+
+#### Windows
+1. Download the latest release from [libusb.info](https://libusb.info)
+2. Extract the ZIP file
+3. Copy `libusb-1.0.dll` to `C:\Windows\System32`
 
 ## Installation
 
@@ -54,31 +86,56 @@ cp config.yaml my_recording_config.yaml
 2. Edit the configuration file (`my_recording_config.yaml`) to match your needs:
 
 ```yaml
-camera:
-  framerate: 30
-  pixel_depth: 8
-  exposure_time: 10000  # microseconds
-  gain: 1.0
-  auto_gain: false
-  resolution:
-    width: 640
-    height: 480
+# Camera Configuration
+device_id: 0  # Try device 0 first (USB camera)
+resolution:
+  width: 2592   # Native resolution for IMX335
+  height: 1944
+exposure_time: 100000  # microseconds (0.1 seconds)
+gain: 5.0
+auto_exposure: false
+auto_gain: false
 
-recording:
-  output_directory: "recordings"
-  file_format: "avi"
+# Recording Configuration
+output_directory: "recordings"
+filename_format: "recording_%Y%m%d_%H%M%S.avi"
 ```
 
-3. Start recording:
+3. Preview the camera feed:
 
 ```bash
-behavior-camera record --config my_recording_config.yaml
+behavior-camera preview --config my_recording_config.yaml
 ```
 
-4. During recording:
+4. Test the camera configuration:
 
-- A preview window will show the live camera feed with FPS
-- Press Ctrl+C in the terminal to stop recording
+```bash
+behavior-camera test --config my_recording_config.yaml
+```
+
+5. Record video:
+
+```bash
+behavior-camera record --config my_recording_config.yaml --duration 30
+```
+
+## Camera Control Modes
+
+The package supports two modes of camera control:
+
+1. **Direct USB Control** (Preferred)
+   - Requires libusb to be installed
+   - Provides full control over camera parameters
+   - Better performance and reliability
+   - Used automatically when libusb is available
+
+2. **OpenCV Fallback**
+   - Used when libusb is not available
+   - Basic camera functionality
+   - Limited control over camera parameters
+   - Works with most USB cameras
+
+The system will automatically try direct USB control first and fall back to OpenCV if necessary.
 
 ## Development
 
@@ -95,6 +152,22 @@ pip install -e ".[dev]"
 
 If you encounter issues:
 
-1. Ensure your camera is properly connected and recognized by your system
-2. Check that the camera resolution in config matches your camera's capabilities
-3. Make sure you have write permissions in the output directory
+1. **Black frames or no signal**
+   - Check that the camera is properly connected
+   - Try different exposure and gain settings
+   - Verify the device ID in the config file
+
+2. **USB control not working**
+   - Ensure libusb is properly installed
+   - Check that the camera is recognized by your system
+   - Try running with elevated privileges if needed
+
+3. **Low FPS or performance issues**
+   - Check USB connection (use USB 3.0 port if available)
+   - Reduce resolution if needed
+   - Monitor system resource usage
+
+4. **Permission errors**
+   - On Linux, you may need to add udev rules
+   - On macOS, grant camera permissions in System Preferences
+   - On Windows, run as administrator if needed

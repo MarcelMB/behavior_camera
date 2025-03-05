@@ -17,6 +17,7 @@ dependencies = [
     "numpy>=1.24.0",
     "pyyaml>=6.0.1",
     "click>=8.1.0",
+    "pyusb>=1.2.1",  # For direct USB control
 ]
 
 [project.scripts]

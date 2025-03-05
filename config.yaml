@@ -1,13 +1,13 @@
-camera:
-  framerate: 30
-  pixel_depth: 8
-  exposure_time: 33000  # microseconds (1/30 second)
-  gain: 1.0
-  auto_gain: true       # Enable auto gain initially
-  resolution:
-    width: 1920
-    height: 1080        # Standard 1080p resolution
+# Camera Configuration
+device_id: 0  # Try device 0 first (USB camera)
+resolution:
+  width: 2592   # Native resolution for IMX335
+  height: 1944
+exposure_time: 100000  # microseconds (0.1 seconds)
+gain: 5.0
+auto_exposure: false
+auto_gain: false
 
-recording:
-  output_directory: "recordings"
-  file_format: "avi" 
+# Recording Configuration
+output_directory: "recordings"
+filename_format: "recording_%Y%m%d_%H%M%S.avi" 
