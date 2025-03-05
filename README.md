@@ -21,6 +21,7 @@ A Python package for controlling and recording from a Sony IMX335 CMOS camera ov
 ## System Requirements
 
 ### Required Software
+
 - Python 3.8 or higher
 - OpenCV (installed automatically)
 - libusb (for direct USB camera control)
@@ -28,6 +29,7 @@ A Python package for controlling and recording from a Sony IMX335 CMOS camera ov
 ### Installing libusb
 
 #### macOS
+
 ```bash
 # Install Homebrew if not already installed
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -37,12 +39,14 @@ brew install libusb
 ```
 
 #### Linux (Ubuntu/Debian)
+
 ```bash
 sudo apt-get update
 sudo apt-get install libusb-1.0-0
 ```
 
 #### Windows
+
 1. Download the latest release from [libusb.info](https://libusb.info)
 2. Extract the ZIP file
 3. Copy `libusb-1.0.dll` to `C:\Windows\System32`

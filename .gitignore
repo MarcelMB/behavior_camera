@@ -37,4 +37,9 @@ ENV/
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Galaxy SDK files (Windows)
+gxipy/*
+!gxipy/__init__.py
+!gxipy/gxiapi.py 
