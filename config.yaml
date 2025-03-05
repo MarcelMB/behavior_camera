@@ -1,0 +1,13 @@
+camera:
+  framerate: 30
+  pixel_depth: 8
+  exposure_time: 33000  # microseconds (1/30 second)
+  gain: 1.0
+  auto_gain: true       # Enable auto gain initially
+  resolution:
+    width: 1920
+    height: 1080        # Standard 1080p resolution
+
+recording:
+  output_directory: "recordings"
+  file_format: "avi" 

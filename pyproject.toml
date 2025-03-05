@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "behavior_camera"
+version = "0.1.0"
+description = "A Python package for controlling and recording from a Sony IMX335 CMOS camera"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+authors = [
+    { name = "Marcel Brosch", email = "marcelbrosch.mb@gmail.com" }
+]
+dependencies = [
+    "opencv-python>=4.8.0",
+    "numpy>=1.24.0",
+    "pyyaml>=6.0.1",
+    "click>=8.1.0",
+]
+
+[project.scripts]
+behavior-camera = "behavior_camera.cli:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["behavior_camera"] 
