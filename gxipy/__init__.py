@@ -7,3 +7,14 @@ features such as exposure control, gain settings, and image acquisition.
 """
 
 __version__ = "2.4.2501.9211"  # Match the Galaxy SDK version
+
+from .gxiapi import (
+    DeviceManager,
+    GxDevice,
+    GxPixelFormatEntry,
+    gx_status_list,
+    gx_init,
+    gx_device_enumerate,
+    gx_device_close,
+    gx_deinit,
+)
