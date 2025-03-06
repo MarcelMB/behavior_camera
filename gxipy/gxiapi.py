@@ -6,10 +6,27 @@ for development purposes. On Windows, this file should be replaced with
 the actual SDK implementation.
 """
 
+import numpy as np
+import time
+
+
+class GxPixelFormatEntry:
+    MONO8 = 0x01080001
+    MONO10 = 0x01100003
+    MONO12 = 0x01100005
+    MONO16 = 0x01100007
+
 
 class gx_status_list:
     SUCCESS = 0
     ERROR = -1
+    INVALID_HANDLE = -2
+    INVALID_PARAMETER = -3
+    NOT_FOUND_TL = -4
+    NOT_FOUND_DEVICE = -5
+    OFFLINE = -6
+    INVALID_ACCESS = -7
+    INVALID_HANDLE_INFO = -8
 
 
 class GxDeviceIPInfo:
@@ -38,6 +55,7 @@ class GxDevice:
         self._gain = 0.0
         self._width = 1920
         self._height = 1080
+        self.data_stream = [GxDataStream()]
 
     def open(self):
         if not self._is_open:
@@ -84,6 +102,48 @@ class GxDevice:
             self._is_streaming = False
             return gx_status_list.SUCCESS
         return gx_status_list.ERROR
+
+
+class GxDataStream:
+    def __init__(self):
+        self._frame_count = 0
+
+    def get_image(self):
+        """Simulate getting an image from the camera."""
+        self._frame_count += 1
+        return GxImage()
+
+
+class GxImage:
+    def __init__(self):
+        self._timestamp = time.time()
+        self._width = 1920
+        self._height = 1080
+        self._pixel_format = GxPixelFormatEntry.MONO8
+
+    def get_timestamp(self):
+        return self._timestamp
+
+    def get_width(self):
+        return self._width
+
+    def get_height(self):
+        return self._height
+
+    def get_pixel_format(self):
+        return self._pixel_format
+
+    def get_numpy_array(self):
+        """Generate a mock image."""
+        return np.random.randint(0, 255, (self._height, self._width), dtype=np.uint8)
+
+    def convert(self, format_name):
+        """Mock conversion."""
+        return self
+
+    def release(self):
+        """Release resources."""
+        pass
 
 
 def gx_init():
