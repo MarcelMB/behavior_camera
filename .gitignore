@@ -42,4 +42,10 @@ Thumbs.db
 # Galaxy SDK files (Windows)
 gxipy/*
 !gxipy/__init__.py
-!gxipy/gxiapi.py 
+!gxipy/gxiapi.py
+
+# Ignore specific SDK files
+*.dll
+*.lib
+*.exp
+*.pdb 
