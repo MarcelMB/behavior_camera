@@ -29,6 +29,39 @@ class gx_status_list:
     INVALID_HANDLE_INFO = -8
 
 
+class DeviceManager:
+    def __init__(self):
+        self._devices = [GxDevice()]
+
+    def update_all_device_list(self):
+        """Update and return the list of available devices."""
+        return len(self._devices), [
+            {
+                "vendor_name": dev.base_info.vendor_name,
+                "model_name": dev.base_info.model_name,
+                "sn": dev.base_info.serial_number,
+                "device_class": dev.base_info.device_class,
+            }
+            for dev in self._devices
+        ]
+
+    def open_device_by_index(self, index):
+        """Open device by index."""
+        if 1 <= index <= len(self._devices):
+            device = self._devices[index - 1]
+            device.open()
+            return device
+        return None
+
+    def open_device_by_sn(self, sn):
+        """Open device by serial number."""
+        for device in self._devices:
+            if device.base_info.serial_number == sn:
+                device.open()
+                return device
+        return None
+
+
 class GxDeviceIPInfo:
     def __init__(self):
         self.ip = "0.0.0.0"
@@ -46,6 +79,33 @@ class GxDeviceBaseInfo:
         self.ip_info = GxDeviceIPInfo()
 
 
+class RemoteFeatureControl:
+    def __init__(self, device):
+        self._device = device
+
+    def is_implemented(self, feature_name):
+        """Check if a feature is implemented."""
+        return True
+
+    def get_float_feature(self, feature_name):
+        """Get a float feature value."""
+        return FloatFeature(self._device, feature_name)
+
+
+class FloatFeature:
+    def __init__(self, device, feature_name):
+        self._device = device
+        self._feature_name = feature_name
+
+    def get(self):
+        """Get the feature value."""
+        return self._device.get_float_feature(self._feature_name)
+
+    def set(self, value):
+        """Set the feature value."""
+        return self._device.set_float_feature(self._feature_name, value)
+
+
 class GxDevice:
     def __init__(self):
         self.base_info = GxDeviceBaseInfo()
@@ -56,6 +116,7 @@ class GxDevice:
         self._width = 1920
         self._height = 1080
         self.data_stream = [GxDataStream()]
+        self._remote_feature = RemoteFeatureControl(self)
 
     def open(self):
         if not self._is_open:
@@ -102,6 +163,14 @@ class GxDevice:
             self._is_streaming = False
             return gx_status_list.SUCCESS
         return gx_status_list.ERROR
+
+    def get_remote_device_feature_control(self):
+        """Get the remote feature control interface."""
+        return self._remote_feature
+
+    def close_device(self):
+        """Close the device."""
+        return self.close()
 
 
 class GxDataStream:
